@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --forceExit --detectOpenHandles",
-    "migrar": "knex migrate:latest --knexfile src/config/knexfile.cjs",
-    "deshacer-migracion": "knex migrate:down --knexfile src/config/knexfile.cjs",
-    "seed": "knex seed:run --knexfile src/config/knexfile.cjs"
+    "start": "bash start.sh",
+    "migrar:prod": "knex migrate:latest --knexfile src/config/knexfile.cjs",
+    "test": "..."
   },
   "keywords": [],
   "author": "",

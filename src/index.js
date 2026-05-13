@@ -9,31 +9,40 @@ import rutasMetricas from './rutas/metricas.rutas.js';
 import rutasCategorias from './rutas/categorias.rutas.js';
 import { manejadorErrores } from './middlewares/manejadorErrores.js';
 import { configurarSwagger } from './config/swagger.js';
+import baseDatos from './config/baseDatos.js';
 
-const app = express();
-const { puerto } = configurarEntorno;
+async function iniciarServidor() {
+  // Ejecutar migraciones automáticamente en cualquier entorno (en desarrollo ya las hiciste, no molesta)
+  try {
+    console.log('Verificando migraciones...');
+    await baseDatos.migrate.latest();
+    console.log('Migraciones actualizadas.');
+  } catch (error) {
+    console.error('Error al ejecutar migraciones:', error.message);
+  }
 
-// Seguridad y parseo
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(morgan('dev'));
+  const app = express();
+  const { puerto } = configurarEntorno;
 
-// Swagger
-configurarSwagger(app);
+  app.use(helmet());
+  app.use(cors());
+  app.use(express.json());
+  app.use(morgan('dev'));
 
-// Rutas
-app.use('/api/auth', rutasAuth);
-app.use('/api/decisiones', rutasDecisiones);
-app.use('/api/metricas', rutasMetricas);
-app.use('/api/categorias', rutasCategorias);
+  configurarSwagger(app);
 
-// Manejo centralizado de errores (siempre después de las rutas)
-app.use(manejadorErrores);
+  app.use('/api/auth', rutasAuth);
+  app.use('/api/decisiones', rutasDecisiones);
+  app.use('/api/metricas', rutasMetricas);
+  app.use('/api/categorias', rutasCategorias);
 
-// Inicio
-app.listen(puerto, () => {
-  console.log(`Servidor corriendo en puerto ${puerto}`);
-});
+  app.use(manejadorErrores);
 
-export default app; // Para testing
+  app.listen(puerto, () => {
+    console.log(`Servidor corriendo en puerto ${puerto}`);
+  });
+}
+
+iniciarServidor();
+
+export default app; // Para testing, aunque en producción no se usa
