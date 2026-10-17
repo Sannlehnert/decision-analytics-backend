@@ -1,6 +1,8 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
+import { configurarEntorno } from './entorno.js';
+
 const opciones = {
   definition: {
     openapi: '3.0.0',
@@ -9,7 +11,7 @@ const opciones = {
       version: '1.0.0',
       description: 'API para registro, análisis y visualización de decisiones.',
     },
-    servers: [{ url: 'http://localhost:3000/api' }],
+    servers: [{ url: configurarEntorno.apiPublicUrl }],
     components: {
       securitySchemes: {
         bearerAuth: {

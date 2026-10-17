@@ -4,6 +4,8 @@ dotenv.config();
 
 export const configurarEntorno = {
   puerto: process.env.PUERTO || 3000,
+  corsOrigin: process.env.CORS_ORIGIN || (process.env.NODE_ENV === 'production' ? false : 'http://localhost:5173'),
+  apiPublicUrl: process.env.API_PUBLIC_URL || '/api',
   jwt: {
     secreto: process.env.JWT_SECRETO,
     expiracion: process.env.JWT_EXPIRACION || '2h',
